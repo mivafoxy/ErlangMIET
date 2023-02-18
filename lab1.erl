@@ -22,7 +22,6 @@ delta([P | L], L1) when L1 == [] ->
 delta([ FirstElem | [ SecondElem | SourceList ] ], ResultList) -> 
     delta([ SecondElem | SourceList ], ResultList ++ [SecondElem - FirstElem]).
 
-
 %% Задание 4.
 list_to_str(Lst, Str) when Lst == [] ->
     Str;
@@ -108,3 +107,21 @@ split([F | Li], TmpLi, ResLi, N) ->
 
 split_all(List, N) -> 
     split(List, [], [], N).
+
+%% Вариант 3.
+
+reverse(L) -> reverse(L,[]).
+
+reverse([],R) -> R;
+reverse([H|T],R) -> reverse(T,[H|R]).
+
+%% Задание 1.
+
+distance({X1, Y1}, {X2, Y2}) -> 
+    math:sqrt((X1 - X2) * (X1 - X2) + (Y1 - Y2) * (Y1 - Y2)).
+
+
+%% Задание 2.
+insert([F| List], X, Tail) when F > X -> insert(List, X, [Tail|F]);
+insert([F| List], X, Tail) when X =< F -> [Tail | [X | [F | List]]].
+        
