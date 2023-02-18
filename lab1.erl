@@ -10,13 +10,13 @@ ball_volume(R) -> R * R * R * 4 / 3 * math:pi().
 from_t(N, M, L) when M == N -> [ M | L ];
 from_t(N, M, L) when M > N ->
     from_t(N, M - 1, [ M | L ]);
-from_t(N, M, L) when M < N ->
+from_t(N, M, _) when M < N ->
     exit({youPullBullshit, N, M}).
 from_to(N, M) -> 
     from_t(N, M, []).
 
 %% Задание 3.
-delta([P | L], L1) when L == [] -> L1;
+delta([_ | L], L1) when L == [] -> L1;
 delta([P | L], L1) when L1 == [] -> 
     delta([ P | L ], [P | L1]);
 delta([ FirstElem | [ SecondElem | SourceList ] ], ResultList) -> 
@@ -122,6 +122,19 @@ distance({X1, Y1}, {X2, Y2}) ->
 
 
 %% Задание 2.
-insert([F| List], X, Tail) when F > X -> insert(List, X, [Tail|F]);
-insert([F| List], X, Tail) when X =< F -> [Tail | [X | [F | List]]].
-        
+insert([], X, ResLi) -> reverse([X|ResLi]);
+insert([F|List], X, ResLi) when X > F -> insert(List, X, [F|ResLi]);
+insert([F|List], X, ResLi) when X =< F -> reverse(ResLi) ++ [X|[F|List]].
+
+%% Задание 3.
+
+drop_every([], _, _, ResLi) -> reverse(ResLi);
+drop_every([_|List], N, M, ResLi) when M == N -> drop_every(List, N, 1, ResLi);
+drop_every([F|List], N, M, ResLi) -> drop_every(List , N, M+1, [F|ResLi]).
+
+drop_every(List, N) -> drop_every(List, N, 1, []).
+
+%% Задание 4.
+
+%% decode([{a,3},b,{c,2},{a,2}]) => [a,a,a,b,c,c,a,a]
+%% rle_decode([{S,C}|Li]) -> 
