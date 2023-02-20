@@ -137,4 +137,10 @@ drop_every(List, N) -> drop_every(List, N, 1, []).
 %% Задание 4.
 
 %% decode([{a,3},b,{c,2},{a,2}]) => [a,a,a,b,c,c,a,a]
-%% rle_decode([{S,C}|Li]) -> 
+
+rle_decode([], _, ResLi) -> reverse(ResLi); 
+rle_decode([{_, Cnt}|Li], Curr, ResLi) when Curr == Cnt -> rle_decode(Li, 0, ResLi);
+rle_decode([{Sym, Cnt}|Li], Curr, ResLi) when Curr < Cnt -> rle_decode([{Sym, Cnt}|Li], (Curr + 1), [Sym|ResLi]);
+rle_decode([Sym|Li], _, ResLi) -> rle_decode(Li, 0, [Sym|ResLi]).
+
+rle_decode(List) -> rle_decode(List, 0, []).
