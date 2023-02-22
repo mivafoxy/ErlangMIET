@@ -30,3 +30,34 @@ sum_pos_squares(Li) -> sum_pos_squares(Li, []).
 %% после отбрасывания начальных элементов, на которых Pred возвращает true.
 
 %% dropwhile(fun(X) -> X < 10 end, [1,3,9,11,6]) => [11, 6]
+
+dropwhile(_, [], ResLi) -> ResLi;
+dropwhile(Fun, [X|Li], ResLi) ->
+    case Fun(X) of
+        true -> dropwhile(Fun, Li, [X|ResLi]);
+        false -> dropwhile(Fun, Li, ResLi)
+    end.
+
+dropwhile(Fun, Li) -> dropwhile(Fun, Li, []).
+
+%% 3. Реализуйте функцию antimap(ListF, X), 
+%% которая принимает список функций одного аргумента ListF и значение X, 
+%% и возвращает список результатов применения всех функций из ListF к X.
+%% antimap([fun(X) -> X + 2 end, fun(X) -> X*3 end], 4) => [6, 12]
+
+antimap([],_,ResLi) -> ResLi;
+antimap([Fun|Funs], X, ResLi) -> antimap(Funs, X, [Fun(X)|ResLi]).
+
+antimap(Funs, X) -> antimap(Funs, X, []).
+
+%% 4. Реализуйте функцию solve(Fun, A, B, Eps), 
+%% которая находит приближённо (с ошибкой не больше Eps) 
+%% корень уравнения Fun(X) = 0 на отрезке [A, B] или точку разрыва, 
+%% в которой Fun меняет знак. 
+%% Можно считать, что F(A) <= 0 <= F(B) 
+%% (как известно, в таком случае  корень заведомо существует). 
+%% Проще всего это сделать, деля отрезок пополам и смотря, 
+%% на концах какой половины различаются знаки Fun.
+
+%% solve(fun(X) -> X*X - 2 end, 0, 2, 0.001) => 1.414 (приближенно)
+

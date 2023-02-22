@@ -1,6 +1,54 @@
 -module(lab1).
 -compile(export_all).
 
+%% Задание 7.
+%% 7. Задайте функцию is_date(DayOfMonth, MonthOfYear, Year), определяющуе номер дня недели по числу месяца, номеру месяца и году. 
+%% Напомню, что год является високосным, если он либо делится на 4, но не на 100, либо делится на 400.
+%% В качестве точки отсчёта возьмите 1 января 2000 года (суббота). Не используйте каких-то формул для нахождения дня недели, это задание на рекурсию!
+%% is_date(1, 1, 2000) => 6
+%% is_date(1, 2, 2013) => 5
+
+contains([],_) -> false;
+contains([El|Li], X) ->
+    if
+        El == X -> true;
+        true -> contains(Li, X)
+    end.
+
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) when DW > 7 -> is_date(D, M, Y, TmpD, TmpM, TmpY, 1);
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) when (D == TmpD), (TmpM == M), (TmpY == Y) -> DW;
+
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) when TmpD == 28 ->
+    case TmpM == 2 of
+        true ->
+            if
+                (TmpY rem 4 == 0), (TmpY rem 100 /= 0) ; (TmpY rem 400 == 0) ->
+                    is_date(D, M, Y, (TmpD + 1), TmpM, TmpY, (DW + 1));
+                true ->
+                    is_date(D, M, Y, 1, (TmpM + 1), TmpY, (DW + 1))
+            end;
+        false ->
+            is_date(D, M, Y, (TmpD + 1), TmpM, TmpY, (DW + 1))
+    end;
+
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) when TmpD == 29 ->
+    case TmpM == 2 of
+        true -> is_date(D, M, Y, 1, (TmpM + 1), TmpY, (DW + 1));
+        false -> is_date(D, M, Y, (TmpD + 1), TmpM, TmpY, (DW + 1))
+    end;
+
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) when TmpD == 30 ->
+    case contains([1, 3, 5, 7, 8, 10, 12], TmpM) of
+        true -> is_date(D, M, Y, (TmpD + 1), TmpM, TmpY, (DW + 1));
+        false -> is_date(D, M, Y, 1, (TmpM + 1), TmpY, (DW + 1))
+    end;
+
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) when (TmpM == 12), (TmpD == 31) -> is_date(D, M, Y, 1, 1, (TmpY + 1), (DW + 1));
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) when TmpD == 31 -> is_date(D, M, Y, 1, (TmpM + 1), TmpY, (DW + 1));
+is_date(D, M, Y, TmpD, TmpM, TmpY, DW) -> is_date(D, M, Y, (TmpD + 1), TmpM, TmpY, (DW + 1)).
+
+is_date(D, M, Y) -> is_date(D, M, Y, 1, 1, 2000, 6).
+
 %% Вариант 1
 
 %% Задание 1.
